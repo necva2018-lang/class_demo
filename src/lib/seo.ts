@@ -1,9 +1,23 @@
 /**
  * SEO 設定與工具
  * 統一管理 site config、metadata 產生邏輯
+ * 優先讀取 admin seo-settings，fallback 為預設值
  */
 
-export const SEO_CONFIG = {
+import { getSeoSettings } from "@/lib/data/seo-settings";
+import { getSiteSettings } from "@/lib/data/settings";
+
+export interface SeoConfig {
+  siteName: string;
+  defaultTitle: string;
+  defaultDescription: string;
+  keywords: string[];
+  baseUrl: string;
+  defaultOgImage: string;
+}
+
+/** 預設值（當 seo-settings 未設定時使用） */
+const FALLBACK_SEO = {
   siteName: "職訓課程招生網",
   defaultTitle: "找到適合的職訓課程，開啟職涯新篇章",
   defaultDescription:
@@ -17,10 +31,50 @@ export const SEO_CONFIG = {
     "就業培訓",
     "職前訓練",
   ] as string[],
-  /** 正式環境請設為實際網域，如 https://training.example.com */
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  /** OG 預設圖片（1200x630 建議） */
   defaultOgImage: "/images/og-default.png",
+};
+
+/** 取得有效 SEO 設定：合併 seo-settings + site-settings，缺欄位時用 fallback */
+export function getEffectiveSeoConfig(): SeoConfig {
+  try {
+    const seo = getSeoSettings();
+    const site = getSiteSettings();
+    const baseUrl = FALLBACK_SEO.baseUrl;
+    const ogImage = seo.ogImage || (seo as { ogImageUrl?: string }).ogImageUrl || FALLBACK_SEO.defaultOgImage;
+    const ogImageUrl = ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage.startsWith("/") ? ogImage : `/${ogImage}`}`;
+    return {
+      siteName: site.siteName || FALLBACK_SEO.siteName,
+      defaultTitle: seo.defaultTitle || FALLBACK_SEO.defaultTitle,
+      defaultDescription: seo.defaultDescription || FALLBACK_SEO.defaultDescription,
+      keywords: FALLBACK_SEO.keywords,
+      baseUrl,
+      defaultOgImage: ogImageUrl,
+    };
+  } catch {
+    return {
+      ...FALLBACK_SEO,
+      defaultOgImage: `${FALLBACK_SEO.baseUrl}${FALLBACK_SEO.defaultOgImage}`,
+    };
+  }
+}
+
+/** @deprecated 請改用 getEffectiveSeoConfig()，保留以相容既有程式 */
+export const SEO_CONFIG = {
+  get siteName() {
+    return getEffectiveSeoConfig().siteName;
+  },
+  get defaultTitle() {
+    return getEffectiveSeoConfig().defaultTitle;
+  },
+  get defaultDescription() {
+    return getEffectiveSeoConfig().defaultDescription;
+  },
+  keywords: FALLBACK_SEO.keywords,
+  baseUrl: FALLBACK_SEO.baseUrl,
+  get defaultOgImage() {
+    return getEffectiveSeoConfig().defaultOgImage;
+  },
 };
 
 export type MetadataParams = {
@@ -52,11 +106,14 @@ export function createMetadata(params: MetadataParams = {}) {
   const url = path
     ? `${SEO_CONFIG.baseUrl}${path.startsWith("/") ? path : `/${path}`}`
     : SEO_CONFIG.baseUrl;
+  const defaultOg = SEO_CONFIG.defaultOgImage;
   const ogImage = image?.startsWith("http")
     ? image
     : image
       ? `${SEO_CONFIG.baseUrl}${image.startsWith("/") ? image : `/${image}`}`
-      : `${SEO_CONFIG.baseUrl}${SEO_CONFIG.defaultOgImage}`;
+      : defaultOg.startsWith("http")
+        ? defaultOg
+        : `${SEO_CONFIG.baseUrl}${defaultOg.startsWith("/") ? defaultOg : `/${defaultOg}`}`;
   const fullTitle = title
     ? `${title} | ${SEO_CONFIG.siteName}`
     : SEO_CONFIG.siteName;

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getCourseById, getCoursesByCategory } from "@/lib/data/courses";
 import { CourseDetailCTA } from "@/components/course/CourseDetailCTA";
 import { CourseDetailFAQ } from "@/components/course/CourseDetailFAQ";
+import { createMetadata, createCourseDescription } from "@/lib/seo";
 import type { Course } from "@/types";
 import { SUB_CATEGORY_LABELS } from "@/types/course";
 
@@ -33,14 +35,24 @@ const DEFAULT_FAQ = [
   },
 ];
 
-export async function generateMetadata({ params }: CourseDetailPageProps) {
+export async function generateMetadata({
+  params,
+}: CourseDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   const course = getCourseById(id);
   if (!course) return { title: "課程不存在" };
-  return {
+  return createMetadata({
     title: course.title,
-    description: course.summary,
-  };
+    description: createCourseDescription({
+      summary: course.summary,
+      location: course.location,
+      hours: course.hours,
+      startDate: course.startDate,
+      subCategory: course.subCategory,
+    }),
+    path: `/courses/${id}`,
+    type: "article",
+  });
 }
 
 function formatFee(fee: number, subsidy?: number | null): string {
