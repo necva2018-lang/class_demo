@@ -1,0 +1,29 @@
+[
+  {
+    "id": "news-001",
+    "slug": "2025-q2-course-schedule",
+    "title": "2025 第二季度課程開課公告",
+    "summary": "職前訓練、在職進修、證照課程全面開跑，即日起開放報名。",
+    "type": "announcement",
+    "publishedAt": "2025-03-10T00:00:00Z",
+    "createdAt": "2025-03-10T00:00:00Z"
+  },
+  {
+    "id": "news-002",
+    "slug": "government-subsidy-update",
+    "title": "政府補助資格說明更新",
+    "summary": "勞動部職前訓練補助要點更新，待業者、特定對象可享全額補助。",
+    "type": "announcement",
+    "publishedAt": "2025-03-05T00:00:00Z",
+    "createdAt": "2025-03-05T00:00:00Z"
+  },
+  {
+    "id": "news-003",
+    "slug": "web-dev-class-graduation",
+    "title": "網頁開發實戰班第 12 期順利結訓",
+    "summary": "本期 28 位學員全數結訓，就業率達 85%，多名學員已獲企業錄用。",
+    "type": "event",
+    "publishedAt": "2025-02-28T00:00:00Z",
+    "createdAt": "2025-02-28T00:00:00Z"
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "case-001",
+    "slug": "web-dev-class-2024",
+    "title": "網頁開發實戰班學員就業成果",
+    "summary": "第 11 期學員結訓後 3 個月內就業率達 85%，多名學員成功轉職前端工程師。",
+    "year": 2024,
+    "metrics": [
+      { "label": "結訓學員", "value": "28 人" },
+      { "label": "就業率", "value": "85%" },
+      { "label": "平均薪資", "value": "4.2 萬" }
+    ],
+    "courseName": "網頁開發實戰班"
+  },
+  {
+    "id": "case-002",
+    "slug": "digital-marketing-success",
+    "title": "數位行銷班學員跨域轉職成功",
+    "summary": "待業者透過職前訓練取得數位行銷技能，結訓後順利進入電商產業擔任行銷專員。",
+    "year": 2024,
+    "metrics": [
+      { "label": "結訓學員", "value": "22 人" },
+      { "label": "轉職成功", "value": "18 人" }
+    ],
+    "courseName": "數位行銷實務班"
+  },
+  {
+    "id": "case-003",
+    "slug": "forklift-license-pass-rate",
+    "title": "堆高機證照班通過率創新高",
+    "summary": "術科與學科雙向培訓，勞動部技術士證照考試通過率達 92%。",
+    "year": 2025,
+    "metrics": [
+      { "label": "結訓學員", "value": "15 人" },
+      { "label": "證照通過率", "value": "92%" }
+    ],
+    "courseName": "堆高機操作證照班"
+  }
+]

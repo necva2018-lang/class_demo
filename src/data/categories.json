@@ -1,0 +1,7 @@
+[
+  { "id": "job-preparation", "slug": "job-preparation", "name": "職前訓練", "parent": "government", "description": "協助待業者取得就業技能", "order": 1 },
+  { "id": "in-service", "slug": "in-service", "name": "在職訓練", "parent": "government", "description": "在職者技能提升與進修", "order": 2 },
+  { "id": "special-class", "slug": "special-class", "name": "專班課程", "parent": "government", "description": "針對特定對象開設的專班", "order": 3 },
+  { "id": "certification", "slug": "certification", "name": "證照課程", "parent": "paid", "description": "取得專業證照的培訓課程", "order": 4 },
+  { "id": "promotion", "slug": "promotion", "name": "推廣課程", "parent": "paid", "description": "一般推廣與興趣課程", "order": 5 }
+]
