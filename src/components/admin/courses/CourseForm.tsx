@@ -166,7 +166,6 @@ export function CourseForm({ initialData, onSave }: CourseFormProps) {
       instructors: form.instructors,
     };
     onSave?.(data);
-    alert("儲存成功（mock 階段資料未實際寫入）");
   };
 
   const teacherName =
