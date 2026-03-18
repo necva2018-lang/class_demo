@@ -2,6 +2,8 @@ import { AdminBannersList } from "@/components/admin/banners/AdminBannersList";
 import { prisma } from "@/lib/db";
 import type { Banner } from "@/types/banner";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminBannersPage() {
   const rows = await prisma.banner.findMany({
     orderBy: [{ order: "asc" }, { createdAt: "asc" }],
