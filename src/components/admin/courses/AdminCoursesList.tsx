@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Course } from "@/types";
+import { withBasePath } from "@/lib/routes";
 import { MAIN_CATEGORY_LABELS, SUB_CATEGORY_LABELS } from "@/types/course";
 import type { CourseStatus } from "@/types/course";
 import {
@@ -57,7 +58,7 @@ export function AdminCoursesList({ courses: initialCourses }: AdminCoursesListPr
 
   async function persist(next: Course[]) {
     setCourses(next);
-    const res = await fetch("/api/config/courses", {
+    const res = await fetch(withBasePath("/api/config/courses"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: next }),

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getFeaturedCourses, getCategories } from "@/lib/data/courses";
 import { getHomeConfig } from "@/lib/data/home";
-import { createMetadata, getEffectiveSeoConfig } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 import { CourseCard } from "@/components/course";
 import {
   SectionTitle,
@@ -13,11 +13,14 @@ import { HomeBannerClient } from "@/components/home/HomeBannerClient";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = createMetadata({
-  title: getEffectiveSeoConfig().defaultTitle,
-  description: getEffectiveSeoConfig().defaultDescription,
-  path: "/",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: config.defaultTitle,
+    description: config.defaultDescription,
+    path: "/",
+  });
+}
 
 export default async function HomePage() {
   const home = await getHomeConfig();

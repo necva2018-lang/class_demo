@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { Course } from "@/types";
+import { withBasePath } from "@/lib/routes";
 import { CourseForm } from "./CourseForm";
 
 interface AdminCourseFormWrapperProps {
@@ -22,7 +23,7 @@ export function AdminCourseFormWrapper({
   const router = useRouter();
 
   const handleSave = async (data: Course) => {
-    const res = await fetch("/api/config/courses", { cache: "no-store" });
+    const res = await fetch(withBasePath("/api/config/courses"), { cache: "no-store" });
     const json = (await res.json()) as { value: Course[] | null };
     const courses = json.value ?? [];
     const exists = courses.some((c) => c.id === data.id || c.slug === data.slug);
@@ -30,7 +31,7 @@ export function AdminCourseFormWrapper({
       ? courses.map((c) => (c.id === data.id || c.slug === data.slug ? data : c))
       : [...courses, data];
 
-    const saveRes = await fetch("/api/config/courses", {
+    const saveRes = await fetch(withBasePath("/api/config/courses"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: next }),

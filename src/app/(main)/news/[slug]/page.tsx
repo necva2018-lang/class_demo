@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getNewsBySlug } from "@/lib/data/news";
 import { ContentMeta } from "@/components/shared/ContentMeta";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 
 const NEWS_TYPE_LABELS: Record<string, string> = {
   announcement: "招生公告",
@@ -28,10 +28,13 @@ export async function generateMetadata({
   params,
 }: NewsDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const news = await getNewsBySlug(slug);
+  const [config, news] = await Promise.all([
+    getEffectiveSeoConfigAsync(),
+    getNewsBySlug(slug),
+  ]);
   if (!news) return { title: "消息不存在" };
 
-  return createMetadata({
+  return createMetadataWithConfig(config, {
     title: news.seoTitle ?? news.title,
     description: news.seoDescription ?? news.summary,
     path: `/news/${slug}`,

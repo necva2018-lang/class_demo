@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 import { ApplyPageClient } from "./ApplyPageClient";
 
-export const metadata: Metadata = createMetadata({
-  title: "線上報名",
-  description:
-    "填寫課程報名表單，我們將於 2 個工作天內與您聯絡。政府補助課程請備妥相關證明文件。",
-  path: "/apply",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: "線上報名",
+    description:
+      "填寫課程報名表單，我們將於 2 個工作天內與您聯絡。政府補助課程請備妥相關證明文件。",
+    path: "/apply",
+  });
+}
 
 export default function ApplyPage() {
   return (

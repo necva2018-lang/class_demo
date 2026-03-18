@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { FaqItem } from "@/lib/data/faq";
+import { withBasePath } from "@/lib/routes";
 import {
   AdminCard,
   AdminTable,
@@ -49,7 +50,7 @@ export function AdminFaqList({ items: initialItems, categories }: AdminFaqListPr
 
   async function persist(next: FaqItem[]) {
     setItems(next);
-    const res = await fetch("/api/config/faq", {
+    const res = await fetch(withBasePath("/api/config/faq"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: next }),

@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 const { PrismaClient } = require("@prisma/client");
 const banners = require("../src/data/banners.json");
+const courses = require("../src/data/courses.json");
+const categories = require("../src/data/categories.json");
 
 const prisma = new PrismaClient();
 
@@ -48,6 +50,23 @@ async function main() {
     }
   }
   console.log(`Seeded ${rows.length} banners.`);
+
+  // 若 AppConfig 尚無 courses/categories，用 JSON 初始值寫入，確保前後台資料一致
+  const coursesRow = await prisma.appConfig.findUnique({ where: { key: "courses" } });
+  if (!coursesRow && Array.isArray(courses)) {
+    await prisma.appConfig.create({
+      data: { key: "courses", value: courses },
+    });
+    console.log(`Seeded ${courses.length} courses to AppConfig.`);
+  }
+
+  const categoriesRow = await prisma.appConfig.findUnique({ where: { key: "categories" } });
+  if (!categoriesRow && Array.isArray(categories)) {
+    await prisma.appConfig.create({
+      data: { key: "categories", value: categories },
+    });
+    console.log(`Seeded ${categories.length} categories to AppConfig.`);
+  }
 }
 
 main()

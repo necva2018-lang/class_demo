@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { AboutConfig } from "@/types/about";
+import { withBasePath } from "@/lib/routes";
 import { AdminCard, AdminFormSection, AdminArrayField } from "@/components/admin";
 import aboutFallback from "@/data/about-config.json";
 
@@ -11,7 +12,7 @@ export function AdminAboutForm() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const res = await fetch("/api/config/about", { cache: "no-store" });
+      const res = await fetch(withBasePath("/api/config/about"), { cache: "no-store" });
       if (!res.ok) return;
       const json = (await res.json()) as { value: AboutConfig | null };
       if (cancelled) return;
@@ -32,7 +33,7 @@ export function AdminAboutForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/config/about", {
+    const res = await fetch(withBasePath("/api/config/about"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: config }),

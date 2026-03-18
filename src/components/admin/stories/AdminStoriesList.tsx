@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { CaseStudy } from "@/lib/data/cases";
+import { withBasePath } from "@/lib/routes";
 import {
   AdminCard,
   AdminTable,
@@ -35,7 +36,7 @@ export function AdminStoriesList({ items: initialItems }: AdminStoriesListProps)
 
   async function persist(next: CaseStudy[]) {
     setItems(next);
-    const res = await fetch("/api/config/cases", {
+    const res = await fetch(withBasePath("/api/config/cases"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: next }),

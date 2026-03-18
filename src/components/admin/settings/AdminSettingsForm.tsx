@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { SiteSettings } from "@/types/settings";
+import { withBasePath } from "@/lib/routes";
 import { AdminCard, AdminFormSection } from "@/components/admin";
 import siteSettings from "@/data/site-settings.json";
 
@@ -11,7 +12,7 @@ export function AdminSettingsForm() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const res = await fetch("/api/config/settings", { cache: "no-store" });
+      const res = await fetch(withBasePath("/api/config/settings"), { cache: "no-store" });
       if (!res.ok) return;
       const json = (await res.json()) as { value: SiteSettings | null };
       if (cancelled) return;
@@ -60,7 +61,7 @@ export function AdminSettingsForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/config/settings", {
+    const res = await fetch(withBasePath("/api/config/settings"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: settings }),

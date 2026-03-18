@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { SeoSettings } from "@/types/seo-config";
+import { withBasePath } from "@/lib/routes";
 import { AdminCard, AdminFormSection } from "@/components/admin";
 import seoSettings from "@/data/seo-settings.json";
 
@@ -11,7 +12,7 @@ export function AdminSeoForm() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const res = await fetch("/api/config/seo", { cache: "no-store" });
+      const res = await fetch(withBasePath("/api/config/seo"), { cache: "no-store" });
       if (!res.ok) return;
       const json = (await res.json()) as { value: SeoSettings | null };
       if (cancelled) return;
@@ -32,7 +33,7 @@ export function AdminSeoForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/config/seo", {
+    const res = await fetch(withBasePath("/api/config/seo"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: settings }),

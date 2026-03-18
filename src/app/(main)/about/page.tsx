@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 import { ABOUT_FALLBACK, getAboutConfig } from "@/lib/data/about";
 import { getSiteSettings } from "@/lib/data/settings";
 import { SectionTitle, CTAButton } from "@/components/shared";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = createMetadata({
-  title: "關於我們",
-  description: ABOUT_FALLBACK.intro,
-  path: "/about",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: "關於我們",
+    description: ABOUT_FALLBACK.intro,
+    path: "/about",
+  });
+}
 
 const FEATURE_ICONS = ["📋", "💰", "📝", "📞"];
 

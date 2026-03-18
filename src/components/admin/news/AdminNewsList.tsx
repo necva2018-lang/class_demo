@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import type { News } from "@/lib/data/news";
+import { withBasePath } from "@/lib/routes";
 import {
   AdminCard,
   AdminTable,
@@ -48,7 +49,7 @@ export function AdminNewsList({ items: initialItems }: AdminNewsListProps) {
 
   async function persist(next: News[]) {
     setItems(next);
-    const res = await fetch("/api/config/news", {
+    const res = await fetch(withBasePath("/api/config/news"), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ value: next }),

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { getCourseById, getCoursesByCategory } from "@/lib/data/courses";
 import { CourseDetailCTA } from "@/components/course/CourseDetailCTA";
 import { CourseDetailFAQ } from "@/components/course/CourseDetailFAQ";
-import { createMetadata, createCourseDescription } from "@/lib/seo";
+import { createMetadataWithConfig, createCourseDescription, getEffectiveSeoConfigAsync } from "@/lib/seo";
 import type { Course } from "@/types";
 import { SUB_CATEGORY_LABELS } from "@/types/course";
 
@@ -47,9 +47,12 @@ export async function generateMetadata({
   params,
 }: CourseDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const course = await getCourseById(id);
+  const [config, course] = await Promise.all([
+    getEffectiveSeoConfigAsync(),
+    getCourseById(id),
+  ]);
   if (!course) return { title: "課程不存在" };
-  return createMetadata({
+  return createMetadataWithConfig(config, {
     title: course.title,
     description: createCourseDescription({
       summary: course.summary,

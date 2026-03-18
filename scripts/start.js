@@ -68,5 +68,6 @@ if (!looksLikeValidPostgresUrl(process.env.DATABASE_URL)) {
 }
 
 run("npx", ["prisma", "migrate", "deploy"]);
+run("npx", ["prisma", "db", "seed"]);
 run("npx", ["next", "start"]);
 

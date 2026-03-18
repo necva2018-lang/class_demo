@@ -2,15 +2,18 @@ import type { Metadata } from "next";
 import { getNews } from "@/lib/data/news";
 import { NewsPageClient } from "./NewsPageClient";
 import { PageHero } from "@/components/shared/PageHero";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = createMetadata({
-  title: "最新消息",
-  description: "職訓課程公告與活動資訊",
-  path: "/news",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: "最新消息",
+    description: "職訓課程公告與活動資訊",
+    path: "/news",
+  });
+}
 
 export default async function NewsPage() {
   const news = await getNews();

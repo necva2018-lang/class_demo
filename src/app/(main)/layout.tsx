@@ -2,6 +2,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getSiteSettings } from "@/lib/data/settings";
 
+export const dynamic = "force-dynamic";
+
 const DEFAULT_NAV_ITEMS = [
   { href: "/", label: "首頁" },
   { href: "/courses", label: "課程總覽" },

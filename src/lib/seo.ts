@@ -1,11 +1,11 @@
 /**
  * SEO 設定與工具
  * 統一管理 site config、metadata 產生邏輯
- * 優先讀取 admin seo-settings，fallback 為預設值
+ * 優先讀取 admin seo-settings + site-settings（Postgres），fallback 為預設值
  */
 
-// NOTE: site/seo settings are now stored in Postgres and loaded asynchronously.
-// For build-time metadata (static `metadata` exports), we keep a pure fallback implementation here.
+import { getSeoSettings } from "@/lib/data/seo-settings";
+import { getSiteSettings } from "@/lib/data/settings";
 
 export interface SeoConfig {
   siteName: string;
@@ -16,8 +16,8 @@ export interface SeoConfig {
   defaultOgImage: string;
 }
 
-/** 預設值（當 seo-settings 未設定時使用） */
-const FALLBACK_SEO = {
+/** 預設值（當 DB 無法取得時使用） */
+const FALLBACK_SEO: SeoConfig = {
   siteName: "職訓課程招生網",
   defaultTitle: "找到適合的職訓課程，開啟職涯新篇章",
   defaultDescription:
@@ -30,17 +30,49 @@ const FALLBACK_SEO = {
     "證照課程",
     "就業培訓",
     "職前訓練",
-  ] as string[],
+  ],
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   defaultOgImage: "/images/og-default.png",
 };
 
-/** 取得有效 SEO 設定：合併 seo-settings + site-settings，缺欄位時用 fallback */
+/** 取得有效 SEO 設定（同步，fallback 用，保留相容） */
 export function getEffectiveSeoConfig(): SeoConfig {
   return {
     ...FALLBACK_SEO,
     defaultOgImage: `${FALLBACK_SEO.baseUrl}${FALLBACK_SEO.defaultOgImage}`,
   };
+}
+
+/** 從 DB 取得有效 SEO 設定（非同步，供 metadata 使用） */
+export async function getEffectiveSeoConfigAsync(): Promise<SeoConfig> {
+  try {
+    const [seo, settings] = await Promise.all([
+      getSeoSettings(),
+      getSiteSettings(),
+    ]);
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const ogImage =
+      seo.ogImage ||
+      (seo as { ogImageUrl?: string }).ogImageUrl ||
+      FALLBACK_SEO.defaultOgImage;
+    const fullOgImage = ogImage.startsWith("http")
+      ? ogImage
+      : `${baseUrl}${ogImage.startsWith("/") ? ogImage : `/${ogImage}`}`;
+    return {
+      siteName: settings.siteName || FALLBACK_SEO.siteName,
+      defaultTitle: seo.defaultTitle || FALLBACK_SEO.defaultTitle,
+      defaultDescription:
+        seo.defaultDescription || FALLBACK_SEO.defaultDescription,
+      keywords: FALLBACK_SEO.keywords,
+      baseUrl,
+      defaultOgImage: fullOgImage,
+    };
+  } catch {
+    return {
+      ...FALLBACK_SEO,
+      defaultOgImage: `${FALLBACK_SEO.baseUrl}${FALLBACK_SEO.defaultOgImage}`,
+    };
+  }
 }
 
 /** @deprecated 請改用 getEffectiveSeoConfig()，保留以相容既有程式 */
@@ -73,12 +105,15 @@ export type MetadataParams = {
 };
 
 /**
- * 產生完整 metadata 物件
+ * 產生完整 metadata 物件（使用指定 config，供 generateMetadata 使用）
  */
-export function createMetadata(params: MetadataParams = {}) {
+export function createMetadataWithConfig(
+  config: SeoConfig,
+  params: MetadataParams = {}
+) {
   const {
     title,
-    description = SEO_CONFIG.defaultDescription,
+    description = config.defaultDescription,
     path = "",
     image,
     type = "website",
@@ -92,28 +127,28 @@ export function createMetadata(params: MetadataParams = {}) {
     ? `${basePath}${path.startsWith("/") ? path : `/${path}`}`
     : basePath || "/";
   const url = pathWithBase
-    ? `${SEO_CONFIG.baseUrl}${pathWithBase.startsWith("/") ? pathWithBase : `/${pathWithBase}`}`
-    : SEO_CONFIG.baseUrl;
-  const defaultOg = SEO_CONFIG.defaultOgImage;
+    ? `${config.baseUrl}${pathWithBase.startsWith("/") ? pathWithBase : `/${pathWithBase}`}`
+    : config.baseUrl;
+  const defaultOg = config.defaultOgImage;
   const ogImage = image?.startsWith("http")
     ? image
     : image
-      ? `${SEO_CONFIG.baseUrl}${image.startsWith("/") ? image : `/${image}`}`
+      ? `${config.baseUrl}${image.startsWith("/") ? image : `/${image}`}`
       : defaultOg.startsWith("http")
         ? defaultOg
-        : `${SEO_CONFIG.baseUrl}${defaultOg.startsWith("/") ? defaultOg : `/${defaultOg}`}`;
+        : `${config.baseUrl}${defaultOg.startsWith("/") ? defaultOg : `/${defaultOg}`}`;
   const fullTitle = title
-    ? `${title} | ${SEO_CONFIG.siteName}`
-    : SEO_CONFIG.siteName;
+    ? `${title} | ${config.siteName}`
+    : config.siteName;
 
   return {
     title: fullTitle,
     description: truncateDescription(description, 160),
-    keywords: [...SEO_CONFIG.keywords],
-    authors: [{ name: SEO_CONFIG.siteName }],
+    keywords: [...config.keywords],
+    authors: [{ name: config.siteName }],
     openGraph: {
       type,
-      siteName: SEO_CONFIG.siteName,
+      siteName: config.siteName,
       title: fullTitle,
       description: truncateDescription(description, 160),
       url,
@@ -130,6 +165,13 @@ export function createMetadata(params: MetadataParams = {}) {
     },
     ...(noIndex && { robots: "noindex, nofollow" as const }),
   };
+}
+
+/**
+ * 產生完整 metadata 物件（同步版，使用 fallback config）
+ */
+export function createMetadata(params: MetadataParams = {}) {
+  return createMetadataWithConfig(getEffectiveSeoConfig(), params);
 }
 
 /** 將 description 截斷至指定字數（中文約 1 字 = 1 字元） */

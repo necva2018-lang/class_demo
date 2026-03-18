@@ -2,16 +2,19 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getCourses, getCategories } from "@/lib/data/courses";
 import { CoursesPageClient } from "./CoursesPageClient";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = createMetadata({
-  title: "課程總覽",
-  description:
-    "瀏覽所有職訓課程，包含政府補助與自費課程。依職前訓練、在職訓練、證照課程、推廣課程分類篩選，找到最適合您的培訓方案。",
-  path: "/courses",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: "課程總覽",
+    description:
+      "瀏覽所有職訓課程，包含政府補助與自費課程。依職前訓練、在職訓練、證照課程、推廣課程分類篩選，找到最適合您的培訓方案。",
+    path: "/courses",
+  });
+}
 
 export default async function CoursesPage() {
   const courses = await getCourses();

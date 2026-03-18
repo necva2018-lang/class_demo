@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCaseBySlug } from "@/lib/data/cases";
 import { ContentMeta } from "@/components/shared/ContentMeta";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 import type { CaseCategory } from "@/lib/data/cases";
 
 const CASE_CATEGORY_LABELS: Record<string, string> = {
@@ -30,9 +30,12 @@ export async function generateMetadata({
   params,
 }: CaseDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const caseItem = await getCaseBySlug(slug);
+  const [config, caseItem] = await Promise.all([
+    getEffectiveSeoConfigAsync(),
+    getCaseBySlug(slug),
+  ]);
   if (!caseItem) return { title: "案例不存在" };
-  return createMetadata({
+  return createMetadataWithConfig(config, {
     title: caseItem.seoTitle ?? caseItem.title,
     description: caseItem.seoDescription ?? caseItem.summary,
     path: `/cases/${slug}`,

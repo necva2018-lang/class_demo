@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { HomePageConfig } from "@/types/home";
+import { withBasePath } from "@/lib/routes";
 // legacy (localStorage) removed: now use API
 import { AdminHomeForm, AdminResetButton } from "@/components/admin";
 
@@ -11,7 +12,7 @@ export function AdminHomePageClient() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const res = await fetch("/api/config/home", { cache: "no-store" });
+      const res = await fetch(withBasePath("/api/config/home"), { cache: "no-store" });
       const json = (await res.json()) as { value: HomePageConfig | null };
       if (cancelled) return;
       if (json.value) setConfig(json.value);
@@ -41,7 +42,7 @@ export function AdminHomePageClient() {
         <h2 className="text-2xl font-bold text-slate-900">首頁內容管理</h2>
         <AdminResetButton
           onReset={async () => {
-            await fetch("/api/config/home", { method: "DELETE" });
+            await fetch(withBasePath("/api/config/home"), { method: "DELETE" });
             const fallback = await (await import("@/data/home-config.json")).default;
             setConfig(fallback as HomePageConfig);
           }}
@@ -50,7 +51,7 @@ export function AdminHomePageClient() {
       <AdminHomeForm
         initialData={config}
         onSave={async (c) => {
-          const res = await fetch("/api/config/home", {
+          const res = await fetch(withBasePath("/api/config/home"), {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ value: c }),

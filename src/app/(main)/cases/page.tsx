@@ -2,15 +2,18 @@ import type { Metadata } from "next";
 import { getCases } from "@/lib/data/cases";
 import { PageHero } from "@/components/shared/PageHero";
 import { CasesPageClient } from "./CasesPageClient";
-import { createMetadata } from "@/lib/seo";
+import { createMetadataWithConfig, getEffectiveSeoConfigAsync } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = createMetadata({
-  title: "成果案例",
-  description: "學員成果與就業案例",
-  path: "/cases",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getEffectiveSeoConfigAsync();
+  return createMetadataWithConfig(config, {
+    title: "成果案例",
+    description: "學員成果與就業案例",
+    path: "/cases",
+  });
+}
 
 export default async function CasesPage() {
   const cases = await getCases();
