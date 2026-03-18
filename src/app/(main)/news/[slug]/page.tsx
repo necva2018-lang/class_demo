@@ -16,6 +16,8 @@ interface NewsDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   const { getNews } = require("@/lib/data/news");
   // Async data source (DB). Disable SSG params here.

@@ -12,6 +12,8 @@ interface CourseDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   const { getCourses } = require("@/lib/data/courses");
   // Async data source (DB). Disable SSG params here.

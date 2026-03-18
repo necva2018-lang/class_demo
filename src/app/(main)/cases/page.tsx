@@ -4,6 +4,8 @@ import { PageHero } from "@/components/shared/PageHero";
 import { CasesPageClient } from "./CasesPageClient";
 import { createMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata({
   title: "成果案例",
   description: "學員成果與就業案例",

@@ -4,6 +4,8 @@ import { NewsPageClient } from "./NewsPageClient";
 import { PageHero } from "@/components/shared/PageHero";
 import { createMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata({
   title: "最新消息",
   description: "職訓課程公告與活動資訊",

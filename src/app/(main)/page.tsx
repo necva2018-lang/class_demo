@@ -11,6 +11,8 @@ import {
 } from "@/components/shared";
 import { HomeBannerClient } from "@/components/home/HomeBannerClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata({
   title: getEffectiveSeoConfig().defaultTitle,
   description: getEffectiveSeoConfig().defaultDescription,

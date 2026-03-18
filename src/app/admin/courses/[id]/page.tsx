@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getCourseById, getCourses } from "@/lib/data/courses";
 import { AdminCourseFormWrapper } from "@/components/admin/courses/AdminCourseFormWrapper";
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   // Async data source (DB). Disable SSG params here.
   return [];

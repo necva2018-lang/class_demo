@@ -4,6 +4,8 @@ import { getCourses, getCategories } from "@/lib/data/courses";
 import { CoursesPageClient } from "./CoursesPageClient";
 import { createMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createMetadata({
   title: "課程總覽",
   description:

@@ -18,6 +18,8 @@ interface CaseDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   const { getCases } = require("@/lib/data/cases");
   // Async data source (DB). Disable SSG params here.

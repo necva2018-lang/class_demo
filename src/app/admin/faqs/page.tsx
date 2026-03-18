@@ -1,6 +1,8 @@
 import { getFaqItems, getFaqCategories } from "@/lib/data/faq";
 import { AdminFaqList } from "@/components/admin/faqs/AdminFaqList";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminFaqsPage() {
   const items = await getFaqItems();
   const categories = await getFaqCategories();

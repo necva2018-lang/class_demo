@@ -1,6 +1,8 @@
 import { getCases } from "@/lib/data/cases";
 import { AdminStoriesList } from "@/components/admin/stories/AdminStoriesList";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminStoriesPage() {
   const cases = await getCases();
 

@@ -1,6 +1,8 @@
 import { getNews } from "@/lib/data/news";
 import { AdminNewsList } from "@/components/admin/news/AdminNewsList";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminNewsPage() {
   const news = await getNews();
 

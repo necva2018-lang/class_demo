@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getCourses } from "@/lib/data/courses";
 import { AdminCoursesList } from "@/components/admin/courses/AdminCoursesList";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminCoursesPage() {
   const courses = await getCourses();
 
