@@ -21,7 +21,7 @@
 
 | 變數名稱 | 值 | 說明 |
 |----------|-----|------|
-| `DATABASE_URL` | 貼上 Postgres 連線字串 | 從 **Postgres 服務** → **Variables** 複製 `POSTGRES_CONNECTION_STRING` 或 `POSTGRES_URI` 的**整段值** |
+| `DATABASE_URL` | 貼上 Postgres 連線字串 | 從 **Postgres 服務** → **Variables** 複製 `POSTGRES_CONNECTION_STRING` 或 `POSTGRES_URI` 的**整段值**。格式：`postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public`。若未含 `?schema=public`，啟動時會自動補上。 |
 
 若 Zeabur 有「連結 / 注入 Postgres」按鈕，可改為連結 Postgres 服務，再手動新增一筆：
 

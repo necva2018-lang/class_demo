@@ -33,7 +33,7 @@ function buildFromPieces() {
   const port = process.env.POSTGRES_PORT;
   const db = process.env.POSTGRES_DATABASE;
   if (!u || !p || !h || !port || !db) return null;
-  return `postgresql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${port}/${db}`;
+  return `postgresql://${encodeURIComponent(u)}:${encodeURIComponent(p)}@${h}:${port}/${db}?schema=public`;
 }
 
 if (!process.env.DATABASE_URL) {
@@ -48,6 +48,15 @@ if (!process.env.DATABASE_URL) {
 
 // If DATABASE_URL is a template like postgresql://${POSTGRES_USERNAME}..., expand it.
 process.env.DATABASE_URL = interpolateTemplateUrl(process.env.DATABASE_URL);
+
+// 確保包含 schema=public，避免 Prisma 連線錯誤（Zeabur 連線字串常缺少此參數）
+function ensureSchemaParam(url) {
+  if (typeof url !== "string" || !url) return url;
+  if (/[?&]schema=/.test(url)) return url;
+  const separator = url.includes("?") ? "&" : "?";
+  return url + separator + "schema=public";
+}
+process.env.DATABASE_URL = ensureSchemaParam(process.env.DATABASE_URL);
 
 // If still invalid, try building from Zeabur's POSTGRES_* pieces.
 if (!looksLikeValidPostgresUrl(process.env.DATABASE_URL)) {
