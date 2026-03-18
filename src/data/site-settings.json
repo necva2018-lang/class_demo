@@ -1,0 +1,22 @@
+{
+  "siteName": "職訓課程招生網",
+  "siteSubtitle": "協助您找到適合的職訓課程，開啟職涯新篇章",
+  "logoUrl": "",
+  "contact": {
+    "phone": "0800-000-000",
+    "email": "service@training.example.com",
+    "address": "台北市信義區範例路 123 號",
+    "serviceHours": "週一至週五 09:00-18:00"
+  },
+  "social": {
+    "line": "",
+    "facebook": ""
+  },
+  "footer": {
+    "copyright": ""
+  },
+  "cta": {
+    "defaultLabel": "立即找課程",
+    "defaultHref": "/courses"
+  }
+}

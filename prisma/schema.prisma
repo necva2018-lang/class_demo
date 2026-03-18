@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Banner {
+  id              String   @id @default(cuid())
+  title           String
+  subtitle        String   @default("")
+  backgroundImage String   @default("")
+  primaryCtaLabel String   @default("立即找課程")
+  primaryCtaHref  String   @default("/courses")
+  secondaryCtaLabel String @default("")
+  secondaryCtaHref  String @default("")
+  order           Int      @default(0)
+  active          Boolean  @default(true)
+  isDefault       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([active, order])
+  @@index([isDefault])
+}
+

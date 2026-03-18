@@ -1,0 +1,15 @@
+[
+  {
+    "id": "banner-001",
+    "title": "找到適合的職訓課程",
+    "subtitle": "開啟職涯新篇章",
+    "backgroundImage": "",
+    "primaryCtaLabel": "立即找課程",
+    "primaryCtaHref": "/courses",
+    "secondaryCtaLabel": "",
+    "secondaryCtaHref": "",
+    "order": 1,
+    "active": true,
+    "isDefault": true
+  }
+]

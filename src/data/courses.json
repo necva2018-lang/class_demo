@@ -1,0 +1,207 @@
+[
+  {
+    "id": "course-001",
+    "slug": "web-development-bootcamp",
+    "title": "網頁開發實戰班",
+    "mainCategory": "government",
+    "subCategory": "job-preparation",
+    "tags": ["熱門", "政府補助", "零基礎"],
+    "summary": "從零開始學習 HTML、CSS、JavaScript，打造完整前端開發能力，結訓即可投入業界。",
+    "description": "本課程由業界資深講師授課，涵蓋現代網頁開發必備技能，包括響應式設計、前端框架入門，以及實作專案經驗。適合無程式基礎者，政府補助最高可全額免費。",
+    "targetAudience": ["待業者", "轉職者", "有意從事網頁開發者"],
+    "features": [
+      "業界講師實務教學",
+      "完整專案實作經驗",
+      "結訓可取得證書",
+      "政府全額補助符合資格者"
+    ],
+    "outline": [
+      { "unit": 1, "title": "HTML5 基礎", "content": "語意化標籤、表單、多媒體" },
+      { "unit": 2, "title": "CSS3 與 RWD", "content": "Flexbox、Grid、媒體查詢" },
+      { "unit": 3, "title": "JavaScript 核心", "content": "變數、函式、DOM 操作" },
+      { "unit": 4, "title": "專案實作", "content": "完整網站開發實戰" }
+    ],
+    "location": "台北市信義區",
+    "hours": 300,
+    "quota": 30,
+    "status": "open",
+    "startDate": "2025-04-15",
+    "endDate": "2025-06-20",
+    "image": "/images/courses/web-dev.jpg",
+    "applyUrl": "/apply?courseId=course-001",
+    "faq": [
+      { "question": "如何報名此課程？", "answer": "請點選「立即報名」填寫表單，我們將於 2 個工作天內與您聯絡。" },
+      { "question": "政府補助資格如何認定？", "answer": "職前訓練一般適用待業者，報名時我們會協助您檢視資格。" }
+    ],
+    "featured": true,
+    "enrolled": 18,
+    "fee": 0,
+    "subsidy": 0,
+    "subsidyNote": "符合資格者政府全額補助",
+    "schedule": "週一至週五 09:00-17:00",
+    "instructors": [
+      { "id": "inst-1", "name": "王大明", "title": "資深前端工程師", "bio": "10 年業界經驗，曾任多家新創公司技術顧問。" }
+    ],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-03-01T00:00:00Z"
+  },
+  {
+    "id": "course-002",
+    "slug": "digital-marketing",
+    "title": "數位行銷實務班",
+    "mainCategory": "government",
+    "subCategory": "job-preparation",
+    "tags": ["政府補助", "行銷"],
+    "summary": "學習 Google Ads、FB 廣告、SEO、社群經營，成為企業搶手的數位行銷人才。",
+    "description": "完整的數位行銷培訓，從廣告投放、內容行銷到數據分析，實務操作與案例研討並重。",
+    "targetAudience": ["待業者", "轉職者", "在職進修者"],
+    "features": [
+      "實務操作與案例研討",
+      "廣告投放工具實戰",
+      "數據分析能力養成"
+    ],
+    "outline": [
+      { "unit": 1, "title": "數位行銷概論", "content": "產業趨勢、職涯發展" },
+      { "unit": 2, "title": "廣告投放實務", "content": "Google Ads、Meta 廣告" },
+      { "unit": 3, "title": "SEO 與內容行銷", "content": "搜尋優化、內容策略" }
+    ],
+    "location": "台北市大安區",
+    "hours": 240,
+    "quota": 25,
+    "status": "open",
+    "startDate": "2025-04-20",
+    "endDate": "2025-06-25",
+    "image": "/images/courses/digital-mkt.jpg",
+    "applyUrl": "/apply?courseId=course-002",
+    "faq": [],
+    "featured": true,
+    "enrolled": 12,
+    "fee": 0,
+    "subsidy": 0,
+    "subsidyNote": "符合資格者政府全額補助",
+    "schedule": "週一至週五 13:00-17:00",
+    "instructors": [
+      { "id": "inst-2", "name": "陳美玲", "title": "數位行銷總監", "bio": "曾任電商平台行銷主管，專精績效型廣告。" }
+    ],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-03-01T00:00:00Z"
+  },
+  {
+    "id": "course-003",
+    "slug": "python-data-analysis",
+    "title": "Python 資料分析入門",
+    "mainCategory": "government",
+    "subCategory": "in-service",
+    "tags": ["在職補助", "程式"],
+    "summary": "以 Python 進行資料處理與視覺化，適合在職者進修，提升職場競爭力。",
+    "description": "從 Python 基礎到 Pandas、Matplotlib 實作，透過實際資料集演練，建立資料分析能力。",
+    "targetAudience": ["在職進修者", "轉職者"],
+    "features": [
+      "實務資料集演練",
+      "Pandas、Matplotlib 實作",
+      "在職勞工 80% 補助"
+    ],
+    "outline": [
+      { "unit": 1, "title": "Python 基礎", "content": "變數、迴圈、函式" },
+      { "unit": 2, "title": "Pandas 資料處理", "content": "讀取、清洗、轉換" },
+      { "unit": 3, "title": "視覺化與報表", "content": "Matplotlib、報表產出" }
+    ],
+    "location": "線上 + 台北教室",
+    "hours": 60,
+    "quota": 20,
+    "status": "open",
+    "startDate": "2025-05-01",
+    "endDate": "2025-05-31",
+    "image": "/images/courses/python.jpg",
+    "applyUrl": "/apply?courseId=course-003",
+    "faq": [],
+    "featured": false,
+    "enrolled": 8,
+    "fee": 5000,
+    "subsidy": 4000,
+    "subsidyNote": "在職勞工可申請 80% 補助",
+    "schedule": "週二、週四 19:00-21:00",
+    "instructors": [
+      { "id": "inst-3", "name": "李建國", "title": "資料科學講師", "bio": "曾任科技公司資料分析師。" }
+    ],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-03-01T00:00:00Z"
+  },
+  {
+    "id": "course-004",
+    "slug": "forklift-license",
+    "title": "堆高機操作證照班",
+    "mainCategory": "paid",
+    "subCategory": "certification",
+    "tags": ["證照", "物流"],
+    "summary": "取得勞動部堆高機操作技術士證照，結訓即可報考，通過率業界領先。",
+    "description": "完整術科與學科培訓，含實機操作練習，協助學員順利取得證照，投入物流、製造等產業。",
+    "targetAudience": ["待業者", "轉職者", "物流從業人員"],
+    "features": [
+      "勞動部合格講師授課",
+      "實機操作練習",
+      "結訓即可報考證照"
+    ],
+    "outline": [
+      { "unit": 1, "title": "學科課程", "content": "法規、安全、機械原理" },
+      { "unit": 2, "title": "術科操作", "content": "堆高機駕駛與堆疊技巧" }
+    ],
+    "location": "新北市土城區",
+    "hours": 42,
+    "quota": 15,
+    "status": "open",
+    "startDate": "2025-04-10",
+    "endDate": "2025-04-18",
+    "image": "/images/courses/forklift.jpg",
+    "applyUrl": "/apply?courseId=course-004",
+    "faq": [],
+    "featured": true,
+    "enrolled": 10,
+    "fee": 12000,
+    "schedule": "週一至週六 08:00-17:00",
+    "instructors": [
+      { "id": "inst-4", "name": "張志偉", "title": "堆高機教練", "bio": "勞動部合格講師，10 年教學經驗。" }
+    ],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-03-01T00:00:00Z"
+  },
+  {
+    "id": "course-005",
+    "slug": "office-excel-advanced",
+    "title": "Excel 進階應用與自動化",
+    "mainCategory": "paid",
+    "subCategory": "promotion",
+    "tags": ["推廣", "辦公室"],
+    "summary": "樞紐分析、函式進階、VBA 入門，提升辦公室工作效率。",
+    "description": "針對已具基礎的學員，提升 Excel 進階應用能力，含巨集與自動化技巧。",
+    "targetAudience": ["在職進修者", "行政人員"],
+    "features": [
+      "樞紐分析與圖表",
+      "進階函式與 VBA 入門",
+      "週末班彈性上課"
+    ],
+    "outline": [
+      { "unit": 1, "title": "樞紐分析", "content": "多維度分析、圖表呈現" },
+      { "unit": 2, "title": "進階函式", "content": "VLOOKUP、INDEX、陣列公式" },
+      { "unit": 3, "title": "VBA 入門", "content": "錄製巨集、基本程式撰寫" }
+    ],
+    "location": "台北市中山區",
+    "hours": 16,
+    "quota": 20,
+    "status": "open",
+    "startDate": "2025-05-15",
+    "endDate": "2025-05-22",
+    "image": "/images/courses/excel.jpg",
+    "applyUrl": "/apply?courseId=course-005",
+    "faq": [],
+    "featured": false,
+    "enrolled": 5,
+    "fee": 3500,
+    "schedule": "週末班 09:00-17:00",
+    "instructors": [
+      { "id": "inst-5", "name": "林小芳", "title": "辦公室軟體講師", "bio": "曾任企業內訓講師，專精 Office 應用。" }
+    ],
+    "createdAt": "2025-01-01T00:00:00Z",
+    "updatedAt": "2025-03-01T00:00:00Z"
+  }
+]
