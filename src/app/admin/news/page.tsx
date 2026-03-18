@@ -1,8 +1,8 @@
 import { getNews } from "@/lib/data/news";
 import { AdminNewsList } from "@/components/admin/news/AdminNewsList";
 
-export default function AdminNewsPage() {
-  const news = getNews();
+export default async function AdminNewsPage() {
+  const news = await getNews();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">

@@ -1,9 +1,9 @@
 import { getFaqItems, getFaqCategories } from "@/lib/data/faq";
 import { AdminFaqList } from "@/components/admin/faqs/AdminFaqList";
 
-export default function AdminFaqsPage() {
-  const items = getFaqItems();
-  const categories = getFaqCategories();
+export default async function AdminFaqsPage() {
+  const items = await getFaqItems();
+  const categories = await getFaqCategories();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">

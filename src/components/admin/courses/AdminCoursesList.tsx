@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Course } from "@/types";
-import { setCoursesLocal } from "@/lib/data/courses";
 import { MAIN_CATEGORY_LABELS, SUB_CATEGORY_LABELS } from "@/types/course";
 import type { CourseStatus } from "@/types/course";
 import {
@@ -56,12 +55,20 @@ export function AdminCoursesList({ courses: initialCourses }: AdminCoursesListPr
     });
   }, [courses, keyword, mainCategory, subCategory, status, featured]);
 
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`確定要刪除「${title}」嗎？`)) {
-      const next = courses.filter((c) => c.id !== id);
-      setCourses(next);
-      setCoursesLocal(next);
-    }
+  async function persist(next: Course[]) {
+    setCourses(next);
+    const res = await fetch("/api/config/courses", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: next }),
+    });
+    if (!res.ok) alert("刪除後儲存失敗（資料庫）");
+  }
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!window.confirm(`確定要刪除「${title}」嗎？`)) return;
+    const next = courses.filter((c) => c.id !== id);
+    await persist(next);
   };
 
   return (

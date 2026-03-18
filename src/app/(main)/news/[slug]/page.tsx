@@ -18,14 +18,15 @@ interface NewsDetailPageProps {
 
 export function generateStaticParams() {
   const { getNews } = require("@/lib/data/news");
-  return getNews().map((n: { slug: string }) => ({ slug: n.slug }));
+  // Async data source (DB). Disable SSG params here.
+  return [];
 }
 
 export async function generateMetadata({
   params,
 }: NewsDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const news = getNewsBySlug(slug);
+  const news = await getNewsBySlug(slug);
   if (!news) return { title: "消息不存在" };
 
   return createMetadata({
@@ -40,7 +41,7 @@ export async function generateMetadata({
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const { slug } = await params;
-  const news = getNewsBySlug(slug);
+  const news = await getNewsBySlug(slug);
 
   if (!news) notFound();
 

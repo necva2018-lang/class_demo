@@ -20,14 +20,15 @@ interface CaseDetailPageProps {
 
 export function generateStaticParams() {
   const { getCases } = require("@/lib/data/cases");
-  return getCases().map((c: { slug: string }) => ({ slug: c.slug }));
+  // Async data source (DB). Disable SSG params here.
+  return [];
 }
 
 export async function generateMetadata({
   params,
 }: CaseDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const caseItem = getCaseBySlug(slug);
+  const caseItem = await getCaseBySlug(slug);
   if (!caseItem) return { title: "案例不存在" };
   return createMetadata({
     title: caseItem.seoTitle ?? caseItem.title,
@@ -42,7 +43,7 @@ export default async function CaseDetailPage({
   params,
 }: CaseDetailPageProps) {
   const { slug } = await params;
-  const caseItem = getCaseBySlug(slug);
+  const caseItem = await getCaseBySlug(slug);
   if (!caseItem) notFound();
 
   const categoryLabel =

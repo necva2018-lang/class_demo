@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AboutConfig } from "@/types/about";
 import { AdminCard, AdminFormSection, AdminArrayField } from "@/components/admin";
-import { getAboutConfig, setAboutConfigLocal } from "@/lib/data/about";
+import aboutFallback from "@/data/about-config.json";
 
 export function AdminAboutForm() {
-  const [config, setConfig] = useState<AboutConfig>(() => getAboutConfig());
+  const [config, setConfig] = useState<AboutConfig>(() => aboutFallback as AboutConfig);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const res = await fetch("/api/config/about", { cache: "no-store" });
+      if (!res.ok) return;
+      const json = (await res.json()) as { value: AboutConfig | null };
+      if (cancelled) return;
+      if (json.value) setConfig(json.value);
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const update = <K extends keyof AboutConfig>(
     key: K,
@@ -15,9 +30,17 @@ export function AdminAboutForm() {
     setConfig((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setAboutConfigLocal(config);
+    const res = await fetch("/api/config/about", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: config }),
+    });
+    if (!res.ok) {
+      alert("儲存失敗");
+      return;
+    }
     alert("儲存成功");
   };
 

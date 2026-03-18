@@ -1,10 +1,5 @@
-/**
- * 最新消息資料取得層
- * 供前台與後台共用，支援 localStorage 持久化
- */
-
 import newsData from "@/data/news.json";
-import { createStorageStore } from "@/lib/admin-storage";
+import { getAppConfig, resetAppConfig, setAppConfig } from "@/lib/config-store";
 
 export interface News {
   id: string;
@@ -24,16 +19,15 @@ export interface News {
   seoDescription?: string;
 }
 
-const defaultNews = (newsData as News[]).sort(
+export const NEWS_FALLBACK: News[] = (newsData as News[]).sort(
   (a, b) =>
     new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
 );
+const KEY = "news";
 
-const store = createStorageStore<News[]>("news", defaultNews);
-
-export function getNews(): News[] {
-  return store
-    .get()
+export async function getNews(): Promise<News[]> {
+  const items = await getAppConfig<News[]>(KEY, NEWS_FALLBACK);
+  return items
     .slice()
     .sort(
       (a, b) =>
@@ -41,25 +35,23 @@ export function getNews(): News[] {
     );
 }
 
-export function getNewsById(id: string): News | undefined {
-  return (store.get() as News[]).find((n) => n.id === id || n.slug === id);
+export async function getNewsById(id: string): Promise<News | undefined> {
+  return (await getNews()).find((n) => n.id === id || n.slug === id);
 }
 
 /** 依 slug 取得單則消息（與 getNewsById 通用） */
-export function getNewsBySlug(slug: string): News | undefined {
-  return getNewsById(slug);
+export async function getNewsBySlug(slug: string): Promise<News | undefined> {
+  return await getNewsById(slug);
 }
 
-export function getLatestNews(limit = 5): News[] {
-  return getNews().slice(0, limit);
+export async function getLatestNews(limit = 5): Promise<News[]> {
+  return (await getNews()).slice(0, limit);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setNewsLocal(items: News[]): void {
-  store.set(items);
+export async function setNews(items: News[]): Promise<void> {
+  await setAppConfig(KEY, items);
 }
 
-/** 還原為預設值 */
-export function resetNewsDefault(): void {
-  store.reset();
+export async function resetNewsDefault(): Promise<void> {
+  await resetAppConfig(KEY);
 }

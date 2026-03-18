@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { createMetadata } from "@/lib/seo";
-import { getAboutConfig } from "@/lib/data/about";
+import { ABOUT_FALLBACK, getAboutConfig } from "@/lib/data/about";
 import { getSiteSettings } from "@/lib/data/settings";
 import { SectionTitle, CTAButton } from "@/components/shared";
 
 export const metadata: Metadata = createMetadata({
   title: "關於我們",
-  description: getAboutConfig().intro,
+  description: ABOUT_FALLBACK.intro,
   path: "/about",
 });
 
 const FEATURE_ICONS = ["📋", "💰", "📝", "📞"];
 
 export default async function AboutPage() {
-  const about = getAboutConfig();
+  const about = await getAboutConfig();
   const settings = await getSiteSettings();
   const contact = about.contact ?? settings.contact;
 

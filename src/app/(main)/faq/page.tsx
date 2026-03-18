@@ -11,8 +11,8 @@ export const metadata: Metadata = createMetadata({
 });
 
 export default async function FAQPage() {
-  const items = getFaqItems();
-  const categories = getFaqCategories();
+  const items = await getFaqItems();
+  const categories = await getFaqCategories();
   const settings = await getSiteSettings();
 
   return (

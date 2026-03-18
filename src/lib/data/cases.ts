@@ -1,10 +1,5 @@
-/**
- * 成果案例資料取得層
- * 供前台與後台共用，支援 localStorage 持久化
- */
-
 import casesData from "@/data/cases.json";
-import { createStorageStore } from "@/lib/admin-storage";
+import { getAppConfig, resetAppConfig, setAppConfig } from "@/lib/config-store";
 
 /** 成果案例分類 */
 export type CaseCategory =
@@ -42,16 +37,15 @@ function toSortDate(c: CaseStudy): string {
   return "1970-01-01";
 }
 
-const defaultCases = [...(casesData as CaseStudy[])].sort(
+export const CASES_FALLBACK: CaseStudy[] = [...(casesData as CaseStudy[])].sort(
   (a, b) =>
     new Date(toSortDate(b)).getTime() - new Date(toSortDate(a)).getTime()
 );
+const KEY = "cases";
 
-const store = createStorageStore<CaseStudy[]>("cases", defaultCases);
-
-export function getCases(): CaseStudy[] {
-  return store
-    .get()
+export async function getCases(): Promise<CaseStudy[]> {
+  const items = await getAppConfig<CaseStudy[]>(KEY, CASES_FALLBACK);
+  return items
     .slice()
     .sort(
       (a, b) =>
@@ -59,23 +53,19 @@ export function getCases(): CaseStudy[] {
     );
 }
 
-export function getCaseById(id: string): CaseStudy | undefined {
-  return (store.get() as CaseStudy[]).find(
-    (c) => c.id === id || c.slug === id
-  );
+export async function getCaseById(id: string): Promise<CaseStudy | undefined> {
+  return (await getCases()).find((c) => c.id === id || c.slug === id);
 }
 
 /** 依 slug 取得單筆案例（與 getCaseById 通用） */
-export function getCaseBySlug(slug: string): CaseStudy | undefined {
-  return getCaseById(slug);
+export async function getCaseBySlug(slug: string): Promise<CaseStudy | undefined> {
+  return await getCaseById(slug);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setCasesLocal(items: CaseStudy[]): void {
-  store.set(items);
+export async function setCases(items: CaseStudy[]): Promise<void> {
+  await setAppConfig(KEY, items);
 }
 
-/** 還原為預設值 */
-export function resetCasesDefault(): void {
-  store.reset();
+export async function resetCasesDefault(): Promise<void> {
+  await resetAppConfig(KEY);
 }

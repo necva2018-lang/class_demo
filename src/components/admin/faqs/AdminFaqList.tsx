@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import type { FaqItem } from "@/lib/data/faq";
-import { setFaqItemsLocal } from "@/lib/data/faq";
 import {
   AdminCard,
   AdminTable,
@@ -48,19 +47,26 @@ export function AdminFaqList({ items: initialItems, categories }: AdminFaqListPr
     });
   }, [items, keyword, categoryFilter]);
 
-  const handleDelete = (id: string, question: string) => {
-    if (window.confirm(`確定要刪除「${question}」嗎？`)) {
-      const next = items.filter((i) => i.id !== id);
-      setItems(next);
-      setFaqItemsLocal(next);
-      if (editingId === id) setEditingId(null);
-    }
+  async function persist(next: FaqItem[]) {
+    setItems(next);
+    const res = await fetch("/api/config/faq", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: next }),
+    });
+    if (!res.ok) alert("儲存失敗（資料庫）");
+  }
+
+  const handleDelete = async (id: string, question: string) => {
+    if (!window.confirm(`確定要刪除「${question}」嗎？`)) return;
+    const next = items.filter((i) => i.id !== id);
+    await persist(next);
+    if (editingId === id) setEditingId(null);
   };
 
-  const handleSaveEdit = (item: FaqItem) => {
+  const handleSaveEdit = async (item: FaqItem) => {
     const next = items.map((i) => (i.id === item.id ? item : i));
-    setItems(next);
-    setFaqItemsLocal(next);
+    await persist(next);
     setEditingId(null);
   };
 
@@ -74,10 +80,9 @@ export function AdminFaqList({ items: initialItems, categories }: AdminFaqListPr
     });
   };
 
-  const handleSaveNew = (item: FaqItem) => {
+  const handleSaveNew = async (item: FaqItem) => {
     const next = [...items, item];
-    setItems(next);
-    setFaqItemsLocal(next);
+    await persist(next);
     setNewItem(null);
   };
 

@@ -1,10 +1,5 @@
-/**
- * FAQ 資料取得層
- * 供前台與後台共用，支援 localStorage 持久化
- */
-
 import faqData from "@/data/faq.json";
-import { createStorageStore } from "@/lib/admin-storage";
+import { getAppConfig, resetAppConfig, setAppConfig } from "@/lib/config-store";
 
 export interface FaqItem {
   id: string;
@@ -21,11 +16,10 @@ export interface FaqCategory {
   order: number;
 }
 
-const defaultItems: FaqItem[] = Array.isArray(faqData)
+export const FAQ_FALLBACK_ITEMS: FaqItem[] = Array.isArray(faqData)
   ? (faqData as FaqItem[])
   : ((faqData as { items: FaqItem[] }).items ?? []);
-
-const store = createStorageStore<FaqItem[]>("faq", defaultItems);
+const KEY = "faq";
 
 function deriveCategories(items: FaqItem[]): FaqCategory[] {
   const categoryMap = new Map<string, FaqCategory>();
@@ -41,27 +35,25 @@ function deriveCategories(items: FaqItem[]): FaqCategory[] {
   return Array.from(categoryMap.values()).sort((a, b) => a.order - b.order);
 }
 
-export function getFaqCategories(): FaqCategory[] {
-  return deriveCategories(getFaqItems());
+export async function getFaqCategories(): Promise<FaqCategory[]> {
+  return deriveCategories(await getFaqItems());
 }
 
-export function getFaqItems(): FaqItem[] {
-  return store
-    .get()
+export async function getFaqItems(): Promise<FaqItem[]> {
+  const items = await getAppConfig<FaqItem[]>(KEY, FAQ_FALLBACK_ITEMS);
+  return items
     .map((item, idx) => ({ ...item, order: item.order ?? idx }))
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
-export function getFaqItemsByCategory(categoryId: string): FaqItem[] {
-  return getFaqItems().filter((i) => i.categoryId === categoryId);
+export async function getFaqItemsByCategory(categoryId: string): Promise<FaqItem[]> {
+  return (await getFaqItems()).filter((i) => i.categoryId === categoryId);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setFaqItemsLocal(items: FaqItem[]): void {
-  store.set(items);
+export async function setFaqItems(items: FaqItem[]): Promise<void> {
+  await setAppConfig(KEY, items);
 }
 
-/** 還原為預設值 */
-export function resetFaqDefault(): void {
-  store.reset();
+export async function resetFaqDefault(): Promise<void> {
+  await resetAppConfig(KEY);
 }

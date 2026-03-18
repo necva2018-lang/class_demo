@@ -19,10 +19,10 @@ export const metadata: Metadata = createMetadata({
 
 export default async function HomePage() {
   const home = await getHomeConfig();
-  const featured = getFeaturedCourses();
+  const featured = await getFeaturedCourses();
   const limit = home.featuredCourses?.limit ?? 6;
   const featuredCourses = featured.slice(0, limit);
-  const categories = getCategories();
+  const categories = await getCategories();
   const governmentCats = categories.filter((c) => c.parent === "government");
   const paidCats = categories.filter((c) => c.parent === "paid");
 

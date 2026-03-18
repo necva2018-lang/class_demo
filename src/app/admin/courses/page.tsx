@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getCourses } from "@/lib/data/courses";
 import { AdminCoursesList } from "@/components/admin/courses/AdminCoursesList";
 
-export default function AdminCoursesPage() {
-  const courses = getCourses();
+export default async function AdminCoursesPage() {
+  const courses = await getCourses();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">

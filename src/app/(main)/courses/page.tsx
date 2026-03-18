@@ -11,9 +11,9 @@ export const metadata: Metadata = createMetadata({
   path: "/courses",
 });
 
-export default function CoursesPage() {
-  const courses = getCourses();
-  const categories = getCategories();
+export default async function CoursesPage() {
+  const courses = await getCourses();
+  const categories = await getCategories();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">

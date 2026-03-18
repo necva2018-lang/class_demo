@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import type { CaseStudy } from "@/lib/data/cases";
-import { setCasesLocal } from "@/lib/data/cases";
 import {
   AdminCard,
   AdminTable,
@@ -34,28 +33,34 @@ export function AdminStoriesList({ items: initialItems }: AdminStoriesListProps)
     );
   }, [items, keyword]);
 
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`確定要刪除「${title}」嗎？`)) {
-      const next = items.filter((i) => i.id !== id);
-      setItems(next);
-      setCasesLocal(next);
-      if (editingId === id) setEditingId(null);
-    }
+  async function persist(next: CaseStudy[]) {
+    setItems(next);
+    const res = await fetch("/api/config/cases", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: next }),
+    });
+    if (!res.ok) alert("儲存失敗（資料庫）");
+  }
+
+  const handleDelete = async (id: string, title: string) => {
+    if (!window.confirm(`確定要刪除「${title}」嗎？`)) return;
+    const next = items.filter((i) => i.id !== id);
+    await persist(next);
+    if (editingId === id) setEditingId(null);
   };
 
-  const handleSave = (item: CaseStudy) => {
+  const handleSave = async (item: CaseStudy) => {
     const exists = items.some((i) => i.id === item.id);
     let next: CaseStudy[];
     if (exists) {
       next = items.map((i) => (i.id === item.id ? item : i));
-      setItems(next);
       setEditingId(null);
     } else {
       next = [item, ...items];
-      setItems(next);
       setAdding(false);
     }
-    setCasesLocal(next);
+    await persist(next);
     alert("儲存成功");
   };
 

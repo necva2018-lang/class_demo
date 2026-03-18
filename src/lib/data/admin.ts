@@ -17,10 +17,10 @@ export interface AdminStats {
   totalCases: number;
 }
 
-export function getAdminStats(): AdminStats {
-  const courses = getCourses();
-  const news = getNews();
-  const cases = getCases();
+export async function getAdminStats(): Promise<AdminStats> {
+  const courses = await getCourses();
+  const news = await getNews();
+  const cases = await getCases();
   const faqCount = Array.isArray(faqData) ? faqData.length : 0;
 
   return {
@@ -43,10 +43,10 @@ export interface RecentUpdate {
   previewHref?: string;
 }
 
-export function getRecentUpdates(limit = 5): RecentUpdate[] {
-  const courses = getCourses();
-  const news = getNews();
-  const cases = getCases();
+export async function getRecentUpdates(limit = 5): Promise<RecentUpdate[]> {
+  const courses = await getCourses();
+  const news = await getNews();
+  const cases = await getCases();
 
   const items: RecentUpdate[] = [
     ...courses.slice(0, 3).map((c) => ({

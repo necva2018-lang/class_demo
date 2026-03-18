@@ -3,66 +3,64 @@ import type { Category } from "@/types";
 import type { CourseOutlineItem, CourseFaqItem } from "@/types/course";
 import coursesData from "@/data/courses.json";
 import categoriesData from "@/data/categories.json";
-import { createStorageStore } from "@/lib/admin-storage";
+import { getAppConfig, resetAppConfig, setAppConfig } from "@/lib/config-store";
 
-const defaultCourses = coursesData as Course[];
-const defaultCategories = categoriesData as Category[];
-const coursesStore = createStorageStore<Course[]>("courses", defaultCourses);
-const categoriesStore = createStorageStore<Category[]>("categories", defaultCategories);
+export const COURSES_FALLBACK = coursesData as Course[];
+export const CATEGORIES_FALLBACK = categoriesData as Category[];
+const COURSES_KEY = "courses";
+const CATEGORIES_KEY = "categories";
 
 /** 取得所有課程 */
-export function getCourses(): Course[] {
-  return coursesStore.get();
+export async function getCourses(): Promise<Course[]> {
+  return await getAppConfig<Course[]>(COURSES_KEY, COURSES_FALLBACK);
 }
 
 /** 依 ID 取得單一課程 */
-export function getCourseById(id: string): Course | undefined {
-  return coursesStore.get().find((c) => c.id === id || c.slug === id);
+export async function getCourseById(id: string): Promise<Course | undefined> {
+  return (await getCourses()).find((c) => c.id === id || c.slug === id);
 }
 
 /** 依子分類取得課程 */
-export function getCoursesByCategory(subCategorySlug: string): Course[] {
-  return coursesStore.get().filter((c) => c.subCategory === subCategorySlug);
+export async function getCoursesByCategory(subCategorySlug: string): Promise<Course[]> {
+  return (await getCourses()).filter((c) => c.subCategory === subCategorySlug);
 }
 
 /** 依主分類取得課程 */
-export function getCoursesByMainCategory(mainCategory: "government" | "paid"): Course[] {
-  return coursesStore.get().filter((c) => c.mainCategory === mainCategory);
+export async function getCoursesByMainCategory(mainCategory: "government" | "paid"): Promise<Course[]> {
+  return (await getCourses()).filter((c) => c.mainCategory === mainCategory);
 }
 
 /** 取得精選課程 */
-export function getFeaturedCourses(): Course[] {
-  return coursesStore.get().filter((c) => c.featured);
+export async function getFeaturedCourses(): Promise<Course[]> {
+  return (await getCourses()).filter((c) => c.featured);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setCoursesLocal(courses: Course[]): void {
-  coursesStore.set(courses);
+export async function setCourses(courses: Course[]): Promise<void> {
+  await setAppConfig(COURSES_KEY, courses);
 }
 
 /** 還原為預設值 */
-export function resetCoursesDefault(): void {
-  coursesStore.reset();
+export async function resetCoursesDefault(): Promise<void> {
+  await resetAppConfig(COURSES_KEY);
 }
 
 /** 取得所有分類 */
-export function getCategories(): Category[] {
-  return categoriesStore.get();
+export async function getCategories(): Promise<Category[]> {
+  return await getAppConfig<Category[]>(CATEGORIES_KEY, CATEGORIES_FALLBACK);
 }
 
 /** 依 slug 取得分類 */
-export function getCategoryBySlug(slug: string): Category | undefined {
-  return categoriesStore.get().find((c) => c.slug === slug);
+export async function getCategoryBySlug(slug: string): Promise<Category | undefined> {
+  return (await getCategories()).find((c) => c.slug === slug);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setCategoriesLocal(categories: Category[]): void {
-  categoriesStore.set(categories);
+export async function setCategories(categories: Category[]): Promise<void> {
+  await setAppConfig(CATEGORIES_KEY, categories);
 }
 
 /** 還原為預設值 */
-export function resetCategoriesDefault(): void {
-  categoriesStore.reset();
+export async function resetCategoriesDefault(): Promise<void> {
+  await resetAppConfig(CATEGORIES_KEY);
 }
 
 /** 建立空白課程（新增用） */

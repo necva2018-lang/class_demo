@@ -10,8 +10,8 @@ export const metadata: Metadata = createMetadata({
   path: "/cases",
 });
 
-export default function CasesPage() {
-  const cases = getCases();
+export default async function CasesPage() {
+  const cases = await getCases();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">

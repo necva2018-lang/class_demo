@@ -10,8 +10,8 @@ export const metadata: Metadata = createMetadata({
   path: "/news",
 });
 
-export default function NewsPage() {
-  const news = getNews();
+export default async function NewsPage() {
+  const news = await getNews();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">

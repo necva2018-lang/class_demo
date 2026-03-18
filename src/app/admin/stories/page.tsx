@@ -1,8 +1,8 @@
 import { getCases } from "@/lib/data/cases";
 import { AdminStoriesList } from "@/components/admin/stories/AdminStoriesList";
 
-export default function AdminStoriesPage() {
-  const cases = getCases();
+export default async function AdminStoriesPage() {
+  const cases = await getCases();
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">

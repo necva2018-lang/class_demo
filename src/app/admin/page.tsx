@@ -26,9 +26,9 @@ function formatDate(str: string) {
   return d.toLocaleDateString("zh-TW");
 }
 
-export default function AdminDashboardPage() {
-  const stats = getAdminStats();
-  const recent = getRecentUpdates(5);
+export default async function AdminDashboardPage() {
+  const stats = await getAdminStats();
+  const recent = await getRecentUpdates(5);
 
   const statCards = [
     { label: "課程總數", value: stats.totalCourses, href: "/admin/courses" },

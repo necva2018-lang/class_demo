@@ -1,24 +1,18 @@
-/**
- * SEO 設定 - 資料取得層
- * 供前台與後台共用，支援 localStorage 持久化
- */
-
 import type { SeoSettings } from "@/types/seo-config";
 import seoSettings from "@/data/seo-settings.json";
-import { createStorageStore } from "@/lib/admin-storage";
+import { getAppConfig, resetAppConfig, setAppConfig } from "@/lib/config-store";
 
-const store = createStorageStore<SeoSettings>("seo", seoSettings as SeoSettings);
+const KEY = "seo";
+export const SEO_FALLBACK = seoSettings as SeoSettings;
 
-export function getSeoSettings(): SeoSettings {
-  return store.get();
+export async function getSeoSettings(): Promise<SeoSettings> {
+  return await getAppConfig<SeoSettings>(KEY, SEO_FALLBACK);
 }
 
-/** 後台 mock 儲存用，同步寫入 localStorage */
-export function setSeoSettingsLocal(settings: SeoSettings): void {
-  store.set(settings);
+export async function setSeoSettings(settings: SeoSettings): Promise<void> {
+  await setAppConfig(KEY, settings);
 }
 
-/** 還原為預設值 */
-export function resetSeoSettingsDefault(): void {
-  store.reset();
+export async function resetSeoSettingsDefault(): Promise<void> {
+  await resetAppConfig(KEY);
 }

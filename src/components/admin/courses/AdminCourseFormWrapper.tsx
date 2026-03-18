@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import type { Course } from "@/types";
-import { getCourses, setCoursesLocal } from "@/lib/data/courses";
 import { CourseForm } from "./CourseForm";
 
 interface AdminCourseFormWrapperProps {
@@ -22,13 +21,24 @@ export function AdminCourseFormWrapper({
 }: AdminCourseFormWrapperProps) {
   const router = useRouter();
 
-  const handleSave = (data: Course) => {
-    const courses = getCourses();
+  const handleSave = async (data: Course) => {
+    const res = await fetch("/api/config/courses", { cache: "no-store" });
+    const json = (await res.json()) as { value: Course[] | null };
+    const courses = json.value ?? [];
     const exists = courses.some((c) => c.id === data.id || c.slug === data.slug);
     const next = exists
       ? courses.map((c) => (c.id === data.id || c.slug === data.slug ? data : c))
       : [...courses, data];
-    setCoursesLocal(next);
+
+    const saveRes = await fetch("/api/config/courses", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: next }),
+    });
+    if (!saveRes.ok) {
+      alert("儲存失敗（資料庫）");
+      return;
+    }
     alert("儲存成功");
     router.push("/admin/courses");
   };

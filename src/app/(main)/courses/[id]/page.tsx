@@ -14,7 +14,8 @@ interface CourseDetailPageProps {
 
 export function generateStaticParams() {
   const { getCourses } = require("@/lib/data/courses");
-  return getCourses().map((c: { id: string }) => ({ id: c.id }));
+  // Async data source (DB). Disable SSG params here.
+  return [];
 }
 
 const DEFAULT_FAQ = [
@@ -44,7 +45,7 @@ export async function generateMetadata({
   params,
 }: CourseDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const course = getCourseById(id);
+  const course = await getCourseById(id);
   if (!course) return { title: "課程不存在" };
   return createMetadata({
     title: course.title,
@@ -85,10 +86,10 @@ export default async function CourseDetailPage({
   params,
 }: CourseDetailPageProps) {
   const { id } = await params;
-  const course = getCourseById(id);
+  const course = await getCourseById(id);
   if (!course) notFound();
 
-  const relatedCourses = getCoursesByCategory(course.subCategory)
+  const relatedCourses = (await getCoursesByCategory(course.subCategory))
     .filter((c) => c.id !== course.id)
     .slice(0, 3);
 
