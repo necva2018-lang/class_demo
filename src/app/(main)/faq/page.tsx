@@ -10,10 +10,10 @@ export const metadata: Metadata = createMetadata({
   path: "/faq",
 });
 
-export default function FAQPage() {
+export default async function FAQPage() {
   const items = getFaqItems();
   const categories = getFaqCategories();
-  const settings = getSiteSettings();
+  const settings = await getSiteSettings();
 
   return (
     <FAQPageClient

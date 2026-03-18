@@ -17,8 +17,8 @@ export const metadata: Metadata = createMetadata({
   path: "/",
 });
 
-export default function HomePage() {
-  const home = getHomeConfig();
+export default async function HomePage() {
+  const home = await getHomeConfig();
   const featured = getFeaturedCourses();
   const limit = home.featuredCourses?.limit ?? 6;
   const featuredCourses = featured.slice(0, limit);

@@ -4,8 +4,8 @@
  * 優先讀取 admin seo-settings，fallback 為預設值
  */
 
-import { getSeoSettings } from "@/lib/data/seo-settings";
-import { getSiteSettings } from "@/lib/data/settings";
+// NOTE: site/seo settings are now stored in Postgres and loaded asynchronously.
+// For build-time metadata (static `metadata` exports), we keep a pure fallback implementation here.
 
 export interface SeoConfig {
   siteName: string;
@@ -37,26 +37,10 @@ const FALLBACK_SEO = {
 
 /** 取得有效 SEO 設定：合併 seo-settings + site-settings，缺欄位時用 fallback */
 export function getEffectiveSeoConfig(): SeoConfig {
-  try {
-    const seo = getSeoSettings();
-    const site = getSiteSettings();
-    const baseUrl = FALLBACK_SEO.baseUrl;
-    const ogImage = seo.ogImage || (seo as { ogImageUrl?: string }).ogImageUrl || FALLBACK_SEO.defaultOgImage;
-    const ogImageUrl = ogImage.startsWith("http") ? ogImage : `${baseUrl}${ogImage.startsWith("/") ? ogImage : `/${ogImage}`}`;
-    return {
-      siteName: site.siteName || FALLBACK_SEO.siteName,
-      defaultTitle: seo.defaultTitle || FALLBACK_SEO.defaultTitle,
-      defaultDescription: seo.defaultDescription || FALLBACK_SEO.defaultDescription,
-      keywords: FALLBACK_SEO.keywords,
-      baseUrl,
-      defaultOgImage: ogImageUrl,
-    };
-  } catch {
-    return {
-      ...FALLBACK_SEO,
-      defaultOgImage: `${FALLBACK_SEO.baseUrl}${FALLBACK_SEO.defaultOgImage}`,
-    };
-  }
+  return {
+    ...FALLBACK_SEO,
+    defaultOgImage: `${FALLBACK_SEO.baseUrl}${FALLBACK_SEO.defaultOgImage}`,
+  };
 }
 
 /** @deprecated 請改用 getEffectiveSeoConfig()，保留以相容既有程式 */

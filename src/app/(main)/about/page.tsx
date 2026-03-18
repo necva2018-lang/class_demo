@@ -12,9 +12,9 @@ export const metadata: Metadata = createMetadata({
 
 const FEATURE_ICONS = ["📋", "💰", "📝", "📞"];
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const about = getAboutConfig();
-  const settings = getSiteSettings();
+  const settings = await getSiteSettings();
   const contact = about.contact ?? settings.contact;
 
   const features = about.coreFeatures.map((text, idx) => {

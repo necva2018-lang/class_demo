@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SiteSettings } from "@/types/settings";
 import { AdminCard, AdminFormSection } from "@/components/admin";
-import { getSiteSettings, setSiteSettingsLocal } from "@/lib/data/settings";
+import siteSettings from "@/data/site-settings.json";
 
 export function AdminSettingsForm() {
-  const [settings, setSettings] = useState<SiteSettings>(() => getSiteSettings());
+  const [settings, setSettings] = useState<SiteSettings>(() => siteSettings as SiteSettings);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const res = await fetch("/api/config/settings", { cache: "no-store" });
+      if (!res.ok) return;
+      const json = (await res.json()) as { value: SiteSettings | null };
+      if (cancelled) return;
+      if (json.value) setSettings(json.value);
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const update = <K extends keyof SiteSettings>(
     key: K,
@@ -43,9 +58,17 @@ export function AdminSettingsForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSiteSettingsLocal(settings);
+    const res = await fetch("/api/config/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: settings }),
+    });
+    if (!res.ok) {
+      alert("儲存失敗");
+      return;
+    }
     alert("儲存成功");
   };
 

@@ -30,12 +30,12 @@ const DEFAULT_LINK_GROUPS = [
   },
 ];
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const settings = getSiteSettings();
+  const settings = await getSiteSettings();
   return (
     <div className="flex min-h-screen flex-col">
       <Header

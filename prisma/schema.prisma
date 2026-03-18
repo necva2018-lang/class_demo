@@ -26,3 +26,10 @@ model Banner {
   @@index([isDefault])
 }
 
+model AppConfig {
+  key       String   @id
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

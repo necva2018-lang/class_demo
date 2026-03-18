@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SeoSettings } from "@/types/seo-config";
 import { AdminCard, AdminFormSection } from "@/components/admin";
-import { getSeoSettings, setSeoSettingsLocal } from "@/lib/data/seo-settings";
+import seoSettings from "@/data/seo-settings.json";
 
 export function AdminSeoForm() {
-  const [settings, setSettings] = useState<SeoSettings>(() => getSeoSettings());
+  const [settings, setSettings] = useState<SeoSettings>(() => seoSettings as SeoSettings);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const res = await fetch("/api/config/seo", { cache: "no-store" });
+      if (!res.ok) return;
+      const json = (await res.json()) as { value: SeoSettings | null };
+      if (cancelled) return;
+      if (json.value) setSettings(json.value);
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const update = <K extends keyof SeoSettings>(
     key: K,
@@ -15,9 +30,17 @@ export function AdminSeoForm() {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSeoSettingsLocal(settings);
+    const res = await fetch("/api/config/seo", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value: settings }),
+    });
+    if (!res.ok) {
+      alert("儲存失敗");
+      return;
+    }
     alert("儲存成功");
   };
 
